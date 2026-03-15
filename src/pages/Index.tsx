@@ -107,6 +107,13 @@ const ExamHeader = ({ info }: { info: HeaderInfo }) => (
   </div>
 );
 
+const ExamFooter = ({ info }: { info: HeaderInfo }) => (
+  <div className="mt-8 pt-4 border-t border-blue-600/30 flex justify-between items-center text-sm font-medium text-blue-600/80">
+    <span>{info.centerName}</span>
+    <span>Trang 1</span>
+  </div>
+);
+
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>("idle");
@@ -291,6 +298,7 @@ const Index = () => {
                         )}
                       </div>
                     ))}
+                    <ExamFooter info={headerInfo} />
                   </>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-muted-foreground min-h-[200px]">
@@ -357,6 +365,7 @@ const Index = () => {
                           </button>
                         </div>
                       ))}
+                      <ExamFooter info={headerInfo} />
                     </motion.div>
                   ) : (
                     <div className="h-full flex flex-col items-center justify-center text-muted-foreground min-h-[200px]">
