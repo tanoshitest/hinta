@@ -151,101 +151,113 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-surface">
-      {/* Navigation */}
-      <nav className="h-14 border-b border-border bg-card flex items-center justify-between px-6 sticky top-0 z-10">
-        <div className="flex items-center gap-2.5">
-          <span className="font-bold text-lg tracking-tight">Hinta</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            Hướng dẫn
-          </Button>
-          <div className="w-8 h-8 rounded-full bg-muted border border-border" />
-        </div>
-      </nav>
-
-      <main className="max-w-[1600px] mx-auto p-4 md:p-6 space-y-5">
-        {/* Top Toolbar */}
-        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-          <div className="bg-card p-4 rounded-xl border border-border flex-1 min-w-0">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
-              Quản lý tệp
-            </h3>
-            <UploadZone file={file} onFileSelect={handleFileSelect} />
+      {/* Sticky Header Container */}
+      <div className="sticky top-0 z-20">
+        {/* Navigation */}
+        <nav className="h-14 border-b border-border bg-card/80 backdrop-blur-md flex items-center justify-between px-6">
+          <div className="flex items-center gap-2.5">
+            <span className="font-bold text-lg tracking-tight">Hinta</span>
           </div>
-
-          <div className="bg-card p-4 rounded-xl border border-border flex flex-col gap-2 md:w-64 w-full">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
-              Công cụ
-            </h3>
-            <Button
-              className="w-full"
-              onClick={generateVariation}
-              disabled={!file || status === "processing"}
-            >
-              {status === "processing" ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : null}
-              Tạo đề phiên bản mới
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+              Hướng dẫn
             </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => setShowExplanations(!showExplanations)}
-              disabled={status !== "completed"}
-            >
-              {showExplanations ? "Ẩn hướng dẫn đáp án" : "Tạo hướng dẫn đáp án"}
-            </Button>
+            <div className="w-8 h-8 rounded-full bg-muted border border-border" />
           </div>
+        </nav>
 
-          <div className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 flex-1">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">
-              Thông tin tiêu đề đề thi
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              <div className="space-y-1">
-                <Label className="text-[10px] text-muted-foreground uppercase">Tên trung tâm / Đơn vị</Label>
-                <Input 
-                  value={headerInfo.centerName} 
-                  onChange={(e) => setHeaderInfo({...headerInfo, centerName: e.target.value})}
-                  className="h-8 text-xs"
-                />
+        {/* Top Toolbar - Now Sticky & Equal Height */}
+        <div className="bg-surface/80 backdrop-blur-md border-b border-border">
+          <div className="max-w-[1600px] mx-auto p-4 md:p-6">
+            <div className="flex flex-col md:flex-row gap-4 items-stretch">
+              <div className="bg-card p-4 rounded-xl border border-border flex-1 min-w-0 flex flex-col">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
+                  Quản lý tệp
+                </h3>
+                <div className="flex-1">
+                  <UploadZone file={file} onFileSelect={handleFileSelect} />
+                </div>
               </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] text-muted-foreground uppercase">Phụ đề (Số đề...)</Label>
-                <Input 
-                  value={headerInfo.subTitle} 
-                  onChange={(e) => setHeaderInfo({...headerInfo, subTitle: e.target.value})}
-                  className="h-8 text-xs"
-                />
+
+              <div className="bg-card p-4 rounded-xl border border-border flex flex-col gap-2 md:w-64 w-full">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+                  Công cụ
+                </h3>
+                <div className="flex flex-col gap-2 h-full justify-center">
+                  <Button
+                    className="w-full"
+                    onClick={generateVariation}
+                    disabled={!file || status === "processing"}
+                  >
+                    {status === "processing" ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : null}
+                    Tạo đề phiên bản mới
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setShowExplanations(!showExplanations)}
+                    disabled={status !== "completed"}
+                  >
+                    {showExplanations ? "Ẩn hướng dẫn đáp án" : "Tạo hướng dẫn đáp án"}
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] text-muted-foreground uppercase">Tên kỳ thi</Label>
-                <Input 
-                  value={headerInfo.examName} 
-                  onChange={(e) => setHeaderInfo({...headerInfo, examName: e.target.value})}
-                  className="h-8 text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] text-muted-foreground uppercase">Môn & Thời gian</Label>
-                <Input 
-                  value={headerInfo.subjectAndTime} 
-                  onChange={(e) => setHeaderInfo({...headerInfo, subjectAndTime: e.target.value})}
-                  className="h-8 text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] text-muted-foreground uppercase">Phiên bản đề</Label>
-                <Input 
-                  value={headerInfo.testVersion} 
-                  onChange={(e) => setHeaderInfo({...headerInfo, testVersion: e.target.value})}
-                  className="h-8 text-xs"
-                />
+
+              <div className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 flex-1">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+                  Thông tin tiêu đề đề thi
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 flex-1">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] text-muted-foreground uppercase">Tên trung tâm / Đơn vị</Label>
+                    <Input 
+                      value={headerInfo.centerName} 
+                      onChange={(e) => setHeaderInfo({...headerInfo, centerName: e.target.value})}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] text-muted-foreground uppercase">Phụ đề (Số đề...)</Label>
+                    <Input 
+                      value={headerInfo.subTitle} 
+                      onChange={(e) => setHeaderInfo({...headerInfo, subTitle: e.target.value})}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] text-muted-foreground uppercase">Tên kỳ thi</Label>
+                    <Input 
+                      value={headerInfo.examName} 
+                      onChange={(e) => setHeaderInfo({...headerInfo, examName: e.target.value})}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] text-muted-foreground uppercase">Môn & Thời gian</Label>
+                    <Input 
+                      value={headerInfo.subjectAndTime} 
+                      onChange={(e) => setHeaderInfo({...headerInfo, subjectAndTime: e.target.value})}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] text-muted-foreground uppercase">Phiên bản đề</Label>
+                    <Input 
+                      value={headerInfo.testVersion} 
+                      onChange={(e) => setHeaderInfo({...headerInfo, testVersion: e.target.value})}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <main className="max-w-[1600px] mx-auto p-4 md:p-6 space-y-5">
 
         {/* Progress Bar */}
         {status === "processing" && (
