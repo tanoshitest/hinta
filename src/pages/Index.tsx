@@ -176,7 +176,7 @@ const Index = () => {
 
           <div className="bg-card p-4 rounded-xl border border-border flex flex-col gap-2 md:w-64 w-full">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
-              Công cụ AI
+              Công cụ
             </h3>
             <Button
               className="w-full"
