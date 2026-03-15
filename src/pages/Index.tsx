@@ -15,19 +15,69 @@ import SkeletonRow from "@/components/SkeletonRow";
 import AnswerKeyModal from "@/components/AnswerKeyModal";
 
 const MOCK_ORIGINAL = [
-  { id: 1, q: "Câu 1: Đạo hàm của hàm số y = sin(x) là gì?", a: "A. cos(x)" },
-  { id: 2, q: "Câu 2: Chiến dịch Điện Biên Phủ kết thúc vào năm nào?", a: "B. 1954" },
-  { id: 3, q: "Câu 3: Nguyên tố hóa học nào có ký hiệu là 'Fe'?", a: "C. Sắt" },
-  { id: 4, q: "Câu 4: Tác phẩm 'Truyện Kiều' do ai sáng tác?", a: "A. Nguyễn Du" },
-  { id: 5, q: "Câu 5: Sông nào dài nhất Việt Nam?", a: "D. Sông Mê Kông" },
+  { 
+    id: 1, 
+    q: "Câu 1: Đạo hàm của hàm số y = sin(x) là gì?", 
+    a: "A. cos(x)",
+    explanation: "Đạo hàm của hàm lượng giác cơ bản: (sin x)' = cos x."
+  },
+  { 
+    id: 2, 
+    q: "Câu 2: Chiến dịch Điện Biên Phủ kết thúc vào năm nào?", 
+    a: "B. 1954",
+    explanation: "Chiến dịch Điện Biên Phủ kết thúc thắng lợi vào ngày 7/5/1954."
+  },
+  { 
+    id: 3, 
+    q: "Câu 3: Nguyên tố hóa học nào có ký hiệu là 'Fe'?", 
+    a: "C. Sắt",
+    explanation: "'Fe' là ký hiệu của sắt (Ferrum) trong bảng tuần hoàn."
+  },
+  { 
+    id: 4, 
+    q: "Câu 4: Tác phẩm 'Truyện Kiều' do ai sáng tác?", 
+    a: "A. Nguyễn Du",
+    explanation: "Truyện Kiều (Đoạn trường tân thanh) là kiệt tác của Đại thi hào Nguyễn Du."
+  },
+  { 
+    id: 5, 
+    q: "Câu 5: Sông nào dài nhất Việt Nam?", 
+    a: "D. Sông Mê Kông",
+    explanation: "Sông Mê Kông là con sông dài nhất chảy qua lãnh thổ Việt Nam (tính tổng chiều dài)."
+  },
 ];
 
 const MOCK_VARIATION = [
-  { id: 1, q: "Câu 1: Tính đạo hàm bậc nhất của hàm số f(x) = sin(x).", a: "A. cos(x)" },
-  { id: 2, q: "Câu 2: Xác định mốc thời gian kết thúc thắng lợi của chiến dịch Điện Biên Phủ.", a: "C. Năm 1954" },
-  { id: 3, q: "Câu 3: Ký hiệu 'Fe' trong bảng tuần hoàn đại diện cho nguyên tố nào?", a: "B. Sắt" },
-  { id: 4, q: "Câu 4: Ai là tác giả của kiệt tác văn học 'Truyện Kiều'?", a: "D. Nguyễn Du" },
-  { id: 5, q: "Câu 5: Xác định con sông có chiều dài lớn nhất chảy qua lãnh thổ Việt Nam.", a: "A. Sông Mê Kông" },
+  { 
+    id: 1, 
+    q: "Câu 1: Tính đạo hàm bậc nhất của hàm số f(x) = sin(x).", 
+    a: "A. cos(x)",
+    explanation: "Công thức đạo hàm cơ bản cho hàm số lượng giác: f'(x) = d/dx(sin x) = cos x."
+  },
+  { 
+    id: 2, 
+    q: "Câu 2: Xác định mốc thời gian kết thúc thắng lợi của chiến dịch Điện Biên Phủ.", 
+    a: "C. Năm 1954",
+    explanation: "Ngày 7 tháng 5 năm 1954, lá cờ 'Quyết chiến Quyết thắng' của quân đội ta tung bay trên nóc hầm Đờ-cát."
+  },
+  { 
+    id: 3, 
+    q: "Câu 3: Ký hiệu 'Fe' trong bảng tuần hoàn đại diện cho nguyên tố nào?", 
+    a: "B. Sắt",
+    explanation: "Ký hiệu hóa học Fe bắt nguồn từ tiếng Latin 'Ferrum', nghĩa là sắt."
+  },
+  { 
+    id: 4, 
+    q: "Câu 4: Ai là tác giả của kiệt tác văn học 'Truyện Kiều'?", 
+    a: "D. Nguyễn Du",
+    explanation: "Nguyễn Du là tác giả của Truyện Kiều, tập thơ được coi là đỉnh cao của tiếng Việt văn học."
+  },
+  { 
+    id: 5, 
+    q: "Câu 5: Xác định con sông có chiều dài lớn nhất chảy qua lãnh thổ Việt Nam.", 
+    a: "A. Sông Mê Kông",
+    explanation: "Sông Mê Kông có tổng chiều dài hơn 4.300 km, là con sông dài nhất trong danh sách các sông chảy qua VN."
+  },
 ];
 
 type Status = "idle" | "uploaded" | "processing" | "completed";
@@ -36,6 +86,7 @@ const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [showAnswers, setShowAnswers] = useState(false);
+  const [showExplanations, setShowExplanations] = useState(false);
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -101,10 +152,10 @@ const Index = () => {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => setShowAnswers(true)}
+              onClick={() => setShowExplanations(!showExplanations)}
               disabled={status !== "completed"}
             >
-              Tạo hướng dẫn đáp án
+              {showExplanations ? "Ẩn hướng dẫn đáp án" : "Tạo hướng dẫn đáp án"}
             </Button>
           </div>
         </div>
@@ -143,9 +194,19 @@ const Index = () => {
               <div className="p-5 overflow-y-auto flex-1 space-y-6">
                 {file ? (
                   MOCK_ORIGINAL.map((q) => (
-                    <div key={q.id}>
+                    <div key={q.id} className="space-y-1.5">
                       <p className="font-medium leading-relaxed">{q.q}</p>
-                      <p className="text-sm text-muted-foreground mt-1.5">{q.a}</p>
+                      <p className="text-sm text-muted-foreground">{q.a}</p>
+                      {showExplanations && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-xs bg-muted/50 p-2.5 rounded-md border border-border/50 text-muted-foreground italic"
+                        >
+                          <span className="font-semibold non-italic mr-1 text-[10px] uppercase tracking-wider">Giải thích:</span>
+                          {q.explanation}
+                        </motion.div>
+                      )}
                     </div>
                   ))
                 ) : (
@@ -193,10 +254,20 @@ const Index = () => {
                       {MOCK_VARIATION.map((q) => (
                         <div
                           key={q.id}
-                          className="group relative p-4 rounded-lg hover:bg-surface transition-colors border border-transparent hover:border-border"
+                          className="group relative p-4 rounded-lg hover:bg-surface transition-colors border border-transparent hover:border-border space-y-1.5"
                         >
                           <p className="font-medium leading-relaxed pr-8">{q.q}</p>
-                          <p className="text-sm text-primary mt-1.5 font-medium">{q.a}</p>
+                          <p className="text-sm text-primary font-medium">{q.a}</p>
+                          {showExplanations && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="text-xs bg-primary/5 p-2.5 rounded-md border border-primary/10 text-muted-foreground italic"
+                            >
+                              <span className="font-semibold non-italic mr-1 text-[10px] uppercase tracking-wider text-primary/70">Giải thích:</span>
+                              {q.explanation}
+                            </motion.div>
+                          )}
                           <button className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1.5 hover:bg-card rounded-md border border-border transition-all">
                             <Copy className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
