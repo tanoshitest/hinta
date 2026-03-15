@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import UploadZone from "@/components/UploadZone";
 import SkeletonRow from "@/components/SkeletonRow";
 import AnswerKeyModal from "@/components/AnswerKeyModal";
@@ -82,12 +84,42 @@ const MOCK_VARIATION = [
 
 type Status = "idle" | "uploaded" | "processing" | "completed";
 
+interface HeaderInfo {
+  centerName: string;
+  subTitle: string;
+  examName: string;
+  subjectAndTime: string;
+  testVersion: string;
+}
+
+const ExamHeader = ({ info }: { info: HeaderInfo }) => (
+  <div className="mb-6 border-b pb-4">
+    <div className="flex justify-between items-baseline mb-3">
+      <span className="text-sm font-medium text-blue-600/80 border-b border-blue-600/30 pb-0.5">
+        {info.centerName} – {info.subTitle}
+      </span>
+    </div>
+    <div className="space-y-1">
+      <h1 className="font-bold text-lg leading-tight">{info.examName}</h1>
+      <p className="font-bold text-sm tracking-wide">{info.subjectAndTime}</p>
+      <p className="font-bold text-xl text-orange-500 mt-2">{info.testVersion}</p>
+    </div>
+  </div>
+);
+
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [showAnswers, setShowAnswers] = useState(false);
   const [showExplanations, setShowExplanations] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [headerInfo, setHeaderInfo] = useState<HeaderInfo>({
+    centerName: "Luyện thi Cao Trí",
+    subTitle: "Đề vật lý số 03",
+    examName: "KÌ THI ĐÁNH GIÁ NĂNG LỰC ĐẦU VÀO ĐẠI HỌC V-SAT",
+    subjectAndTime: "MÔN: VẬT LÍ – THỜI GIAN: 60 PHÚT",
+    testVersion: "ĐỀ THAM KHẢO SỐ 03"
+  });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleFileSelect = useCallback((f: File) => {
@@ -158,6 +190,54 @@ const Index = () => {
               {showExplanations ? "Ẩn hướng dẫn đáp án" : "Tạo hướng dẫn đáp án"}
             </Button>
           </div>
+
+          <div className="bg-card p-4 rounded-xl border border-border flex flex-col gap-3 flex-1">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+              Thông tin tiêu đề đề thi
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground uppercase">Tên trung tâm / Đơn vị</Label>
+                <Input 
+                  value={headerInfo.centerName} 
+                  onChange={(e) => setHeaderInfo({...headerInfo, centerName: e.target.value})}
+                  className="h-8 text-xs"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground uppercase">Phụ đề (Số đề...)</Label>
+                <Input 
+                  value={headerInfo.subTitle} 
+                  onChange={(e) => setHeaderInfo({...headerInfo, subTitle: e.target.value})}
+                  className="h-8 text-xs"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground uppercase">Tên kỳ thi</Label>
+                <Input 
+                  value={headerInfo.examName} 
+                  onChange={(e) => setHeaderInfo({...headerInfo, examName: e.target.value})}
+                  className="h-8 text-xs"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground uppercase">Môn & Thời gian</Label>
+                <Input 
+                  value={headerInfo.subjectAndTime} 
+                  onChange={(e) => setHeaderInfo({...headerInfo, subjectAndTime: e.target.value})}
+                  className="h-8 text-xs"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground uppercase">Phiên bản đề</Label>
+                <Input 
+                  value={headerInfo.testVersion} 
+                  onChange={(e) => setHeaderInfo({...headerInfo, testVersion: e.target.value})}
+                  className="h-8 text-xs"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Progress Bar */}
@@ -193,22 +273,25 @@ const Index = () => {
               </div>
               <div className="p-5 overflow-y-auto flex-1 space-y-6">
                 {file ? (
-                  MOCK_ORIGINAL.map((q) => (
-                    <div key={q.id} className="space-y-1.5">
-                      <p className="font-medium leading-relaxed">{q.q}</p>
-                      <p className="text-sm text-muted-foreground">{q.a}</p>
-                      {showExplanations && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="text-xs bg-muted/50 p-2.5 rounded-md border border-border/50 text-muted-foreground italic"
-                        >
-                          <span className="font-semibold non-italic mr-1 text-[10px] uppercase tracking-wider">Giải thích:</span>
-                          {q.explanation}
-                        </motion.div>
-                      )}
-                    </div>
-                  ))
+                  <>
+                    <ExamHeader info={headerInfo} />
+                    {MOCK_ORIGINAL.map((q) => (
+                      <div key={q.id} className="space-y-1.5">
+                        <p className="font-medium leading-relaxed">{q.q}</p>
+                        <p className="text-sm text-muted-foreground">{q.a}</p>
+                        {showExplanations && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-xs bg-muted/50 p-2.5 rounded-md border border-border/50 text-muted-foreground italic"
+                          >
+                            <span className="font-semibold non-italic mr-1 text-[10px] uppercase tracking-wider">Giải thích:</span>
+                            {q.explanation}
+                          </motion.div>
+                        )}
+                      </div>
+                    ))}
+                  </>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-muted-foreground min-h-[200px]">
                     <FileText className="w-12 h-12 mb-3 opacity-20" />
@@ -251,6 +334,7 @@ const Index = () => {
                       transition={{ type: "spring", damping: 25, stiffness: 300 }}
                       className="space-y-2"
                     >
+                      <ExamHeader info={headerInfo} />
                       {MOCK_VARIATION.map((q) => (
                         <div
                           key={q.id}
